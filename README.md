@@ -1,5 +1,6 @@
 # Scolagile tracker
-To use this script, you first will have to create a `.env` file following this format
+This script will show a notification in your computer if a professor changed any of your scolagile notes while it's running.
+To use it, you first will have to create a `.env` file following this format
 ```env
 USERNAME=yourusername
 PASSWORD=yourpassword
