@@ -22,12 +22,16 @@ SCOLAGILE_NOTES_URL = "https://fst-scolagile.uh1.ac.ma/#/scolarite/etudiant/0/no
 page_html = ""
 
 with sync_playwright() as p:
+    print("Launching headless browser...")
     browser = p.chromium.launch(headless=True)
     context = browser.new_context()
     page = context.new_page()
+
+    print("Navigating to scolagile...")
     page.goto(SCOLAGILE_URL)
 
     # str here just to supress a warning
+    print(f"Athenticating user {str(config.get('USERNAME'))}...")
     page.fill('input[name="username"]', str(config.get("USERNAME")))
     page.fill('input[name="password"]', str(config.get("PASSWORD")))
 
@@ -36,9 +40,9 @@ with sync_playwright() as p:
     # Wait for page to finish navigation
     page.wait_for_load_state('load')
     page.goto(SCOLAGILE_NOTES_URL)
-    sleep(1)
-    
-    # Parsing the page
+
+    # periodically checking the page
+    print("Checking... If a change is detected you'll be notified")    
     page_html = page.content()
     i = 1
     while True:
@@ -48,6 +52,7 @@ with sync_playwright() as p:
         if html != page_html:
             notification.send()
             page_html = html
+            print("The page has changed, you should take a look!!")
             pass
         print(f"request number {i}", end="\r")
         i += 1
