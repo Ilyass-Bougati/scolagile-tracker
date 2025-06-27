@@ -42,7 +42,7 @@ with sync_playwright() as p:
     page_html = page.content()
     i = 1
     while True:
-        sleep(10)
+        sleep(30)
         page.goto(SCOLAGILE_NOTES_URL)
         html = page.content()
         if html != page_html:
