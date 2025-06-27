@@ -17,14 +17,17 @@ notification.message = "Someone changed your notes on scolagile, enter to check 
 
 # In the dotenv we must have USERNAME and PASSWORD
 config = dotenv_values(".env")
+SCOLAGILE_URL = "https://scolagile.pw/"
+SCOLAGILE_NOTES_URL = "https://fst-scolagile.uh1.ac.ma/#/scolarite/etudiant/0/notes"
 page_html = ""
 
 with sync_playwright() as p:
     browser = p.chromium.launch(headless=True)
     context = browser.new_context()
     page = context.new_page()
-    page.goto("https://scolagile.pw/")
+    page.goto(SCOLAGILE_URL)
 
+    # str here just to supress a warning
     page.fill('input[name="username"]', str(config.get("USERNAME")))
     page.fill('input[name="password"]', str(config.get("PASSWORD")))
 
@@ -32,7 +35,7 @@ with sync_playwright() as p:
 
     # Wait for page to finish navigation
     page.wait_for_load_state('load')
-    page.goto("https://fst-scolagile.uh1.ac.ma/#/scolarite/etudiant/0/notes")
+    page.goto(SCOLAGILE_NOTES_URL)
     sleep(1)
     
     # Parsing the page
@@ -40,7 +43,7 @@ with sync_playwright() as p:
     i = 1
     while True:
         sleep(10)
-        page.goto("https://fst-scolagile.uh1.ac.ma/#/scolarite/etudiant/0/notes")
+        page.goto(SCOLAGILE_NOTES_URL)
         html = page.content()
         if html != page_html:
             notification.send()
