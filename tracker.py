@@ -44,6 +44,7 @@ with sync_playwright() as p:
         html = page.content()
         if html != page_html:
             notification.send()
+            page_html = html
             pass
         print(f"request number {i}", end="\r")
         i += 1
