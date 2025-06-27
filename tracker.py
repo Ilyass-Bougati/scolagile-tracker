@@ -3,6 +3,13 @@ from playwright.sync_api import sync_playwright
 from time import sleep
 from notifypy import Notify
 
+# Checking the environment variables
+# In the dotenv we must have USERNAME and PASSWORD
+config = dotenv_values(".env")
+if config.get("USERNAME") is None or config.get("PASSWORD") is None:
+    print("The environment variables weren't setup correctly, you should define USERNAME and PASSWORD")
+    exit(1)
+
 # setting up the notification
 notification = Notify()
 notification.title = "The app is running"
@@ -15,8 +22,7 @@ notification.send()
 notification.title = "Scolagile Notes Changed!!"
 notification.message = "Someone changed your notes on scolagile, enter to check them"
 
-# In the dotenv we must have USERNAME and PASSWORD
-config = dotenv_values(".env")
+# scraping the website
 SCOLAGILE_URL = "https://scolagile.pw/"
 SCOLAGILE_NOTES_URL = "https://fst-scolagile.uh1.ac.ma/#/scolarite/etudiant/0/notes"
 page_html = ""
