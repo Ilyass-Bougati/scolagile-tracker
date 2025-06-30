@@ -9,8 +9,7 @@ from utils.trackerUtils import *
 config = dotenv_values(".env")
 if config.get("USERNAME") is None or config.get("PASSWORD") is None:
     print("The environment variables weren't setup correctly, you should define USERNAME and PASSWORD")
-    exit(1)
-
+    
 
 def track(username: str, password: str):
 

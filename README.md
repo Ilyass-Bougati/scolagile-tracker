@@ -13,3 +13,9 @@ then install playwrite's browser
 ```bash
 playwrite install
 ```
+
+# Compiling
+to compile this project you can user [pyinstaller](https://pyinstaller.org/en/stable/)
+```bash
+pyinstaller -i icon/exe.ico -F -w gui.py
+```
