@@ -19,8 +19,8 @@ def on_closing():
 
 # Create main window
 root = tk.Tk()
-root.title("Simple Tracker")
-root.geometry("300x200")
+root.title("Scolagile Tracker")
+root.geometry("200x200")
 root.resizable(False, False)
 
 # Set the close window listener
