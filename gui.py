@@ -11,6 +11,8 @@ def on_track():
     args = (username, password)
     trackerThread = threading.Thread(target=track, args=args, daemon=True)
     trackerThread.start()
+    messagebox.showinfo("Info", "The tracker is running in the background now!")
+    track_button.destroy()
 
 def on_closing():
     if messagebox.askokcancel("Quit", "Do you want to close the application?"):
