@@ -25,6 +25,7 @@ root.resizable(False, False)
 
 # Set the close window listener
 root.protocol("WM_DELETE_WINDOW", on_closing)
+root.iconbitmap('icon/exe.ico')
 
 # Style configuration for a clean look
 style = ttk.Style()
