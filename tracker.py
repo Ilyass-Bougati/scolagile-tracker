@@ -11,47 +11,57 @@ if config.get("USERNAME") is None or config.get("PASSWORD") is None:
     print("The environment variables weren't setup correctly, you should define USERNAME and PASSWORD")
     exit(1)
 
-send_init_notification()
 
-# scraping the website
-SCOLAGILE_URL = "https://scolagile.pw/"
-SCOLAGILE_NOTES_URL = "https://fst-scolagile.uh1.ac.ma/#/scolarite/etudiant/0/notes"
-original_page = ""
+def track(username: str, password: str):
 
-with sync_playwright() as p:
-    print("Launching headless browser...")
-    browser = p.chromium.launch(headless=True)
-    context = browser.new_context()
-    page = context.new_page()
+    send_init_notification()
 
-    print("Navigating to scolagile...")
-    page.goto(SCOLAGILE_URL)
+    # scraping the website
+    SCOLAGILE_URL = "https://scolagile.pw/"
+    SCOLAGILE_NOTES_URL = "https://fst-scolagile.uh1.ac.ma/#/scolarite/etudiant/0/notes"
+    original_page = ""
 
-    # str here just to supress a warning
-    print(f"Athenticating user {str(config.get('USERNAME'))}...")
-    page.fill('input[name="username"]', str(config.get("USERNAME")))
-    page.fill('input[name="password"]', str(config.get("PASSWORD")))
+    with sync_playwright() as p:
+        print("Launching headless browser...")
+        browser = p.chromium.launch(headless=True)
+        context = browser.new_context()
+        page = context.new_page()
 
-    page.click('input[id="kc-login"]')
+        print("Navigating to scolagile...")
+        page.goto(SCOLAGILE_URL)
 
-    # Wait for page to finish navigation
-    page.wait_for_load_state('load')
-    page.goto(SCOLAGILE_NOTES_URL)
-    sleep(5)
+        # str here just to supress a warning
+        print(f"Athenticating user {username}...")
+        page.fill('input[name="username"]', username)
+        page.fill('input[name="password"]', password)
 
-    # periodically checking the page
-    print("Checking... If a change is detected you'll be notified")    
-    original_notes = get_notes(page.content())
+        page.click('input[id="kc-login"]')
 
-    i = 1
-    while True:
-        sleep(25)
-        page.reload()
+        # Wait for page to finish navigation
+        page.wait_for_load_state('load')
+        page.goto(SCOLAGILE_NOTES_URL)
         sleep(5)
-        new_notes =  get_notes(page.content())
-        if not compare_notes(original_notes, new_notes):
-            send_change_notification()
-            original_page = new_notes
-            print("The page has changed, you should take a look!!")
-        print(f"request number {i}", end="\r")
-        i += 1
+
+        # periodically checking the page
+        print("Checking... If a change is detected you'll be notified")    
+        original_notes = get_notes(page.content())
+
+        i = 1
+        while True:
+            sleep(25)
+            page.reload()
+            sleep(5)
+            new_notes =  get_notes(page.content())
+            if not compare_notes(original_notes, new_notes):
+                send_change_notification()
+                original_page = new_notes
+                print("The page has changed, you should take a look!!")
+            print(f"request number {i}", end="\r")
+            i += 1
+
+
+if __name__ == "__main__":
+    username = str(config.get("USERNAME"))
+    password = str(config.get("PASSWORD"))
+
+    track(username, password)
